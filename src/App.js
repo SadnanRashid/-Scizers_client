@@ -11,8 +11,11 @@ function App() {
   const [query, setQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [modalData, setModalData] = useState({ name: "abc", phone: "123" });
-  const [editPhn, setEditPhn] = useState("");
+  const [Phone, setPhone] = useState("");
+  const [Name, setName] = useState("");
+  const [ID, setID] = useState("");
   const [render, setRender] = useState(1);
+  const [load, setLoad] = useState(1);
 
   useEffect(() => {
     const fetchAll = async () => {
@@ -21,7 +24,7 @@ function App() {
         .then((e) => setSearchResults(e));
     };
     fetchAll();
-  }, []);
+  }, [load]);
 
   useEffect(() => {
     const handleSearch = async () => {
@@ -37,7 +40,10 @@ function App() {
   const handleSearch = async () => {
     // event.preventDefault();
     let fetchURI = "";
-    if (isNaN(query)) {
+    if (query.length === 0 || query === "") {
+      fetchURI = "http://localhost:5000/api/contacts/all";
+      console.log("--------");
+    } else if (isNaN(query)) {
       fetchURI = `http://localhost:5000/api/contacts?name=${query}`;
       console.log("name");
     } else {
@@ -50,16 +56,32 @@ function App() {
     console.log(results);
   };
 
-  const handleInputChange = (event) => {
+  const handleInputChange = async (event) => {
     setQuery(event.target.value);
     setSearchResults([]);
-    if (event.target.value) {
-      handleSearch();
+    handleSearch();
+    if (event.target.value === "") {
+      setLoad(load + 1);
     }
   };
 
+  const handleDelete = async (id) => {
+    fetch(`http://localhost:5000/api/contacts/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        toast.success("Contact Deleted!");
+        setLoad(load + 1);
+      })
+      .catch((error) => toast.error("Error occured"));
+  };
+
   const handleEdit = async (id, phone, name) => {
-    fetch(`http://localhost:5000/contacts/${id}`, {
+    fetch(`http://localhost:5000/api/contacts/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -120,10 +142,23 @@ function App() {
                         className="btn btn-sm btn-primary me-2"
                         data-bs-toggle="modal"
                         data-bs-target="#exampleModal"
+                        onClick={() => {
+                          setID(result._id);
+                          const name = result.name;
+                          const phone = result.phone;
+                          setModalData({ name, phone });
+                        }}
                       >
                         Edit
                       </button>
-                      <button className="btn btn-sm btn-danger">Delete</button>
+                      <button
+                        className="btn btn-sm btn-danger"
+                        onClick={() => {
+                          handleDelete(result._id);
+                        }}
+                      >
+                        Delete
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -158,6 +193,7 @@ function App() {
                 aria-label="Close"
               />
             </div>
+            {/* <form onSubmit={handleEdit}> */}
             <div className="modal-body">
               <p className="mb-0">Enter Name: </p>
               <input
@@ -167,8 +203,8 @@ function App() {
                 className="mb-3"
                 placeholder={modalData.name}
                 onChange={(e) => {
-                  setEditPhn(e.target.value);
-                  console.log(editPhn);
+                  setName(e.target.value);
+                  console.log(Name);
                 }}
               />
               <p className="mb-0">Enter Phone: </p>
@@ -179,8 +215,8 @@ function App() {
                 className="mt-0"
                 placeholder={modalData.phone}
                 onChange={(e) => {
-                  setEditPhn(e.target.value);
-                  console.log(editPhn);
+                  setPhone(e.target.value);
+                  console.log(Phone);
                 }}
               />
             </div>
@@ -192,10 +228,17 @@ function App() {
               >
                 Close
               </button>
-              <button type="button" className="btn btn-primary">
+              <button
+                type="submit"
+                className="btn btn-primary"
+                onClick={() => {
+                  handleEdit(ID, Phone, Name);
+                }}
+              >
                 Save changes
               </button>
             </div>
+            {/* </form> */}
           </div>
         </div>
       </div>
