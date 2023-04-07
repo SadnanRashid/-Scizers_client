@@ -8,9 +8,9 @@ export default function Search() {
     // event.preventDefault();
     let fetchURI = "";
     if (query !== NaN) {
-      fetchURI = `http://localhost:5000/api/contacts?name=${query}`;
+      fetchURI = `https://server-six-virid.vercel.app/api/contacts?name=${query}`;
     } else {
-      fetchURI = `http://localhost:5000/api/contacts?phone=${query}`;
+      fetchURI = `https://server-six-virid.vercel.app/api/contacts?phone=${query}`;
     }
     console.log(query);
     const response = await fetch(fetchURI);

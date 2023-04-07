@@ -19,7 +19,7 @@ function App() {
 
   useEffect(() => {
     const fetchAll = async () => {
-      fetch("http://localhost:5000/api/contacts/all")
+      fetch("https://server-six-virid.vercel.app/api/contacts/all")
         .then((res) => res.json())
         .then((e) => setSearchResults(e));
     };
@@ -28,7 +28,7 @@ function App() {
 
   useEffect(() => {
     const handleSearch = async () => {
-      const fetchURI = `http://localhost:5000/api/contacts?phone=${query}`;
+      const fetchURI = `https://server-six-virid.vercel.app/api/contacts?phone=${query}`;
       const response = await fetch(fetchURI);
       const results = await response.json();
       setSearchResults(results);
@@ -41,13 +41,13 @@ function App() {
     // event.preventDefault();
     let fetchURI = "";
     if (query.length === 0 || query === "") {
-      fetchURI = "http://localhost:5000/api/contacts/all";
+      fetchURI = "https://server-six-virid.vercel.app/api/contacts/all";
       console.log("--------");
     } else if (isNaN(query)) {
-      fetchURI = `http://localhost:5000/api/contacts?name=${query}`;
+      fetchURI = `https://server-six-virid.vercel.app/api/contacts?name=${query}`;
       console.log("name");
     } else {
-      fetchURI = `http://localhost:5000/api/contacts?phone=${query}`;
+      fetchURI = `https://server-six-virid.vercel.app/api/contacts?phone=${query}`;
       console.log("phone");
     }
     const response = await fetch(fetchURI);
@@ -66,7 +66,7 @@ function App() {
   };
 
   const handleDelete = async (id) => {
-    fetch(`http://localhost:5000/api/contacts/${id}`, {
+    fetch(`https://server-six-virid.vercel.app/api/contacts/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -81,7 +81,13 @@ function App() {
   };
 
   const handleEdit = async (id, phone, name) => {
-    fetch(`http://localhost:5000/api/contacts/${id}`, {
+    if (!phone) {
+      phone = Phone;
+    }
+    if (!name) {
+      name = Name;
+    }
+    fetch(`https://server-six-virid.vercel.app/api/contacts/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -146,6 +152,8 @@ function App() {
                           setID(result._id);
                           const name = result.name;
                           const phone = result.phone;
+                          setName(name);
+                          setPhone(phone);
                           setModalData({ name, phone });
                         }}
                       >
