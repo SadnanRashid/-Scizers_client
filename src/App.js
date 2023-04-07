@@ -1,11 +1,10 @@
-import logo from "./logo.svg";
 import "./App.css";
 import { useState } from "react";
 import { useEffect } from "react";
-import Search from "./components/search";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
 import toast, { Toaster } from "react-hot-toast";
+import Post from "./components/post";
 
 function App() {
   const [query, setQuery] = useState("");
@@ -112,146 +111,153 @@ function App() {
   };
 
   return (
-    <div>
-      <div className="position-relative">
-        <div className="mt-3 d-flex flex-row justify-content-center mb-4">
-          <input
-            type="text"
-            placeholder="Search"
-            className="form-control w-75"
-            value={query}
-            onChange={handleInputChange}
-          />
-          <button className="btn btn-dark ms-2">Search</button>
-        </div>
-        {/*  */}
-        <div className="table-responsive">
-          <table className="table table-hover">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Phone Number</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-
-            {searchResults.length > 0 && (
-              <tbody>
-                {searchResults.map((result) => (
+    <div className="container-fluid">
+      <div className="row">
+        <div className="w-75 col-sm-9 main" id="main">
+          <div className="position-relative">
+            <div className="mt-3 d-flex flex-row justify-content-center mb-4">
+              <input
+                type="text"
+                placeholder="Search"
+                className="form-control w-75"
+                value={query}
+                onChange={handleInputChange}
+              />
+              <button className="btn btn-dark ms-2">Search</button>
+            </div>
+            {/*  */}
+            <div className="table-responsive">
+              <table className="table table-hover">
+                <thead>
                   <tr>
-                    <td>1</td>
-                    <td>{result.name}</td>
-                    <td>{result.phone}</td>
-                    <td>
-                      <button
-                        className="btn btn-sm btn-primary me-2"
-                        data-bs-toggle="modal"
-                        data-bs-target="#exampleModal"
-                        onClick={() => {
-                          setID(result._id);
-                          const name = result.name;
-                          const phone = result.phone;
-                          setName(name);
-                          setPhone(phone);
-                          setModalData({ name, phone });
-                        }}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="btn btn-sm btn-danger"
-                        onClick={() => {
-                          handleDelete(result._id);
-                        }}
-                      >
-                        Delete
-                      </button>
-                    </td>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Phone Number</th>
+                    <th>Action</th>
                   </tr>
-                ))}
-              </tbody>
-            )}
-          </table>
-          {searchResults.length == 0 && (
-            <h4 className="text-center">No results found</h4>
-          )}
-        </div>
+                </thead>
 
-        {/*  */}
-      </div>
-      {/* Modal */}
-      <div
-        className="modal fade"
-        id="exampleModal"
-        tabIndex={-1}
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title" id="exampleModalLabel">
-                Edit a contact
-              </h5>
-              <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              />
+                {searchResults.length > 0 && (
+                  <tbody>
+                    {searchResults.map((result) => (
+                      <tr>
+                        <td>1</td>
+                        <td>{result.name}</td>
+                        <td>{result.phone}</td>
+                        <td>
+                          <button
+                            className="btn btn-sm btn-primary me-2"
+                            data-bs-toggle="modal"
+                            data-bs-target="#exampleModal"
+                            onClick={() => {
+                              setID(result._id);
+                              const name = result.name;
+                              const phone = result.phone;
+                              setName(name);
+                              setPhone(phone);
+                              setModalData({ name, phone });
+                            }}
+                          >
+                            Edit
+                          </button>
+                          <button
+                            className="btn btn-sm btn-danger"
+                            onClick={() => {
+                              handleDelete(result._id);
+                            }}
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                )}
+              </table>
+              {searchResults.length == 0 && (
+                <h4 className="text-center">No results found</h4>
+              )}
             </div>
-            {/* <form onSubmit={handleEdit}> */}
-            <div className="modal-body">
-              <p className="mb-0">Enter Name: </p>
-              <input
-                type="text"
-                name="editText"
-                id="editText"
-                className="mb-3"
-                placeholder={modalData.name}
-                onChange={(e) => {
-                  setName(e.target.value);
-                  console.log(Name);
-                }}
-              />
-              <p className="mb-0">Enter Phone: </p>
-              <input
-                type="text"
-                name="editText"
-                id="editText"
-                className="mt-0"
-                placeholder={modalData.phone}
-                onChange={(e) => {
-                  setPhone(e.target.value);
-                  console.log(Phone);
-                }}
-              />
+
+            {/*  */}
+          </div>
+          {/* Modal */}
+          <div
+            className="modal fade"
+            id="exampleModal"
+            tabIndex={-1}
+            aria-labelledby="exampleModalLabel"
+            aria-hidden="true"
+          >
+            <div className="modal-dialog">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title" id="exampleModalLabel">
+                    Edit a contact
+                  </h5>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  />
+                </div>
+                {/* <form onSubmit={handleEdit}> */}
+                <div className="modal-body">
+                  <p className="mb-0">Enter Name: </p>
+                  <input
+                    type="text"
+                    name="editText"
+                    id="editText"
+                    className="mb-3"
+                    placeholder={modalData.name}
+                    onChange={(e) => {
+                      setName(e.target.value);
+                      console.log(Name);
+                    }}
+                  />
+                  <p className="mb-0">Enter Phone: </p>
+                  <input
+                    type="text"
+                    name="editText"
+                    id="editText"
+                    className="mt-0"
+                    placeholder={modalData.phone}
+                    onChange={(e) => {
+                      setPhone(e.target.value);
+                      console.log(Phone);
+                    }}
+                  />
+                </div>
+                <div className="modal-footer">
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                  >
+                    Close
+                  </button>
+                  <button
+                    type="submit"
+                    className="btn btn-primary"
+                    onClick={() => {
+                      handleEdit(ID, Phone, Name);
+                    }}
+                  >
+                    Save changes
+                  </button>
+                </div>
+                {/* </form> */}
+              </div>
             </div>
-            <div className="modal-footer">
-              <button
-                type="button"
-                className="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Close
-              </button>
-              <button
-                type="submit"
-                className="btn btn-primary"
-                onClick={() => {
-                  handleEdit(ID, Phone, Name);
-                }}
-              >
-                Save changes
-              </button>
-            </div>
-            {/* </form> */}
+          </div>
+          <div>
+            <Toaster />
           </div>
         </div>
-      </div>
-      <div>
-        <Toaster />
+        <div className=" col-sm-3 sidebar" id="sidebar">
+          <Post setLoad={setLoad} />
+        </div>
       </div>
     </div>
   );
